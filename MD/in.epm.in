@@ -2,7 +2,7 @@
 units real
 boundary p p p
 atom_style molecular
-read_data EPM.data
+read_data EPM*.data
 #]
 
 #[ Modified TraPPE Force Field 

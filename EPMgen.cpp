@@ -681,6 +681,13 @@ int main()
     lmpfile << rymin << " " << rymax << " ylo yhi\n";
     lmpfile << rzmin << " " << rzmax << " zlo zhi\n\n";
 
+    // Masses section
+    lmpfile << "Masses\n\n";
+    lmpfile << "1 13.019 # CH\n"; // Mass for CH
+    lmpfile << "2 14.027 # CH2\n"; // Mass for CH2
+    lmpfile << "3 15.035 # CH3\n"; // Mass for CH3
+    lmpfile << "\n";
+
     // Atoms section
     lmpfile << "Atoms\n\n";
     // atomid molid type rx ry rz
@@ -697,13 +704,6 @@ int main()
             }
         }
     }
-    lmpfile << "\n";
-
-    // Masses section
-    lmpfile << "Masses\n\n";
-    lmpfile << "1 13.019\n"; // Mass for CH
-    lmpfile << "2 14.027\n"; // Mass for CH2
-    lmpfile << "3 15.035\n"; // Mass for CH3
     lmpfile << "\n";
 
     // Bonds section

@@ -158,15 +158,15 @@ void molFree(int n)
     // init the mol occupancy, free the molecule/polymer chain occupancy in box
     for(int i = 0; i < n; i++) for(int j = 0; j < n; j++) for(int k = 0; k < n; k++) box[i][j][k].free_mol = 1;
 }
-ofstream outfile("monomer_types.txt");
+
 void find2connections()
 {
     // Find all 2-connection atoms in the polymers
-    outfile << "--- Connected Two Atoms ---" << std::endl;
+    // outfile << "--- Connected Two Atoms ---" << std::endl;
     long int bondid = 1; // Initialize bond id
     for (int i = 0; i < epm.size(); ++i) {
         const polymer& p = epm[i];
-        outfile << "Polymer " << i << ":" << std::endl;
+        // outfile << "Polymer " << i << ":" << std::endl;
         std::set<std::pair<long int, long int>> reported_pairs; // To avoid duplicate reporting
 
         for (const auto& entry : p.monomerConnections) {
@@ -174,7 +174,7 @@ void find2connections()
             for (long int atom2_id : entry.second) { // A - B
                 if (atom1_id < atom2_id) { // Ensure unique pairs (A, B) and (B, A) are not reported twice
                     if (reported_pairs.find({atom1_id, atom2_id}) == reported_pairs.end()) {
-                        outfile << "  " << atom1_id << " - " << atom2_id << std::endl;
+                        // outfile << "  " << atom1_id << " - " << atom2_id << std::endl;
                         epm[i].bondNum++; // Increment bond count for the polymer
                         // Add to the bond list
                         bondList.push_back({bondid++, 1, atom1_id, atom2_id}); // type 1 for all bonds
@@ -188,16 +188,16 @@ void find2connections()
     for (const auto& polymer : epm) {
         totalBondNum += polymer.bondNum; // Sum up the bond counts from all polymers
     }
-    outfile << "Total number of bonds: " << totalBondNum << std::endl; // Assuming all polymers have the same bond count
+    // outfile << "Total number of bonds: " << totalBondNum << std::endl; // Assuming all polymers have the same bond count
 }
 void find3connections()
 {
     // find all 3-connection atoms in the polymers
-    outfile << "--- Connected Three Atoms ---" << std::endl;
+    // outfile << "--- Connected Three Atoms ---" << std::endl;
     long int angleid = 1; // Initialize angle id
     for (int i = 0; i < epm.size(); ++i) {
         const polymer& p = epm[i];
-        outfile << "Polymer " << i << ":" << std::endl;
+        // outfile << "Polymer " << i << ":" << std::endl;
         std::set<std::vector<long int>> reported_triplets; // To avoid duplicate reporting
         for (const auto& entry : p.monomerConnections) {
             long int atom0_id = entry.first;
@@ -207,7 +207,7 @@ void find3connections()
                     std::vector<long int> sorted_triplet = {atom0_id, atom1_id, atom2_id};
                     std::sort(sorted_triplet.begin(), sorted_triplet.end()); // Sort to ensure unique representation
                     if (reported_triplets.find(sorted_triplet) == reported_triplets.end()) {
-                        outfile << "  " << atom0_id << " - " << atom1_id << " - " << atom2_id << std::endl;
+                        // outfile << "  " << atom0_id << " - " << atom1_id << " - " << atom2_id << std::endl;
                         epm[i].angleNum++; // Increment angle count for the polymer
                         // Add to the angle list
                         int atom1_type = -1;
@@ -239,16 +239,16 @@ void find3connections()
     for (const auto& polymer : epm) {
         totalAngleNum += polymer.angleNum; // Sum up the angle counts from all polymers
     }
-    outfile << "Total number of angles: " << totalAngleNum << std::endl; // Assuming all polymers have the same angle count
+    // outfile << "Total number of angles: " << totalAngleNum << std::endl; // Assuming all polymers have the same angle count
 }
 void find4connections()
 {
     // find all 4-connection atoms in the polymers
-    outfile << "--- Connected Four Atoms in line ---" << std::endl;
+    // outfile << "--- Connected Four Atoms in line ---" << std::endl;
     long int dihedralid = 1; // Initialize dihedral id
     for (int i = 0; i < epm.size(); ++i) {
         const polymer& p = epm[i];
-        outfile << "Polymer " << i << ":" << std::endl;
+        // outfile << "Polymer " << i << ":" << std::endl;
         std::set<std::vector<long int>> reported_quadruplets; // To avoid duplicate reporting
         for (const auto& entry : p.monomerConnections) {
             long int atom0_id = entry.first;
@@ -260,7 +260,7 @@ void find4connections()
                         std::vector<long int> sorted_quadruplet = {atom0_id, atom1_id, atom2_id, atom3_id};
                         std::sort(sorted_quadruplet.begin(), sorted_quadruplet.end()); // Sort to ensure unique representation
                         if (reported_quadruplets.find(sorted_quadruplet) == reported_quadruplets.end()) {
-                            outfile << "  " << atom0_id << " - " << atom1_id << " - " << atom2_id << " - " << atom3_id << std::endl;
+                            // outfile << "  " << atom0_id << " - " << atom1_id << " - " << atom2_id << " - " << atom3_id << std::endl;
                             epm[i].dihedralNum++; // Increment dihedral count for the polymer
                             // Add to the dihedral list
                             dihedralList.push_back({dihedralid++, 1, atom0_id, atom1_id, atom2_id, atom3_id}); // type 1 for all dihedrals
@@ -275,13 +275,13 @@ void find4connections()
     for (const auto& polymer : epm) {
         totalDihedralNum += polymer.dihedralNum; // Sum up the dihedral counts from all polymers
     }
-    outfile << "Total number of dihedrals: " << totalDihedralNum << std::endl; // Assuming all polymers have the same dihedral count
+    // outfile << "Total number of dihedrals: " << totalDihedralNum << std::endl; // Assuming all polymers have the same dihedral count
 
-    outfile << "--- Connected Four Atoms in star ---" << std::endl;
+    // outfile << "--- Connected Four Atoms in star ---" << std::endl;
     long int improperid = 1; // Initialize improper id
     for (int i = 0; i < epm.size(); ++i) {
         const polymer& p = epm[i];
-        outfile << "Polymer " << i << ":" << std::endl;
+        // outfile << "Polymer " << i << ":" << std::endl;
         std::set<std::vector<long int>> reported_stars; // To avoid duplicate reporting
         for (const auto& entry : p.monomerConnections) {
             long int center_id = entry.first;
@@ -294,7 +294,7 @@ void find4connections()
                         std::vector<long int> star = {center_id, neighbors[a], neighbors[b], neighbors[c]};
                         std::sort(star.begin(), star.end());
                         if (reported_stars.find(star) == reported_stars.end()) {
-                            outfile << "  " << center_id << " - (" << neighbors[a] << ", " << neighbors[b] << ", " << neighbors[c] << ")" << std::endl;
+                            // outfile << "  " << center_id << " - (" << neighbors[a] << ", " << neighbors[b] << ", " << neighbors[c] << ")" << std::endl;
                             epm[i].improperNum++; // Increment improper count for the polymer
                             // Add to the improper list
                             improperList.push_back({improperid++, 1, center_id, neighbors[a], neighbors[b], neighbors[c]}); // type 1 for all impropers
@@ -309,18 +309,48 @@ void find4connections()
     for (const auto& polymer : epm) {
         totalImproperNum += polymer.improperNum; // Sum up the improper counts from all polymers
     }
-    outfile << "Total number of impropers: " << totalImproperNum << std::endl; // Assuming all polymers have the same improper count
+    // outfile << "Total number of impropers: " << totalImproperNum << std::endl; // Assuming all polymers have the same improper count
 }
-
+void printProgress(int current, int total)
+{
+    // Print progress of the operation
+    int barWidth = 70; // Width of the progress bar
+    float progress = static_cast<float>(current) / total;
+    cout << "[";
+    int pos = static_cast<int>(barWidth * progress);
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) cout << "=";
+        else if (i == pos) cout << ">";
+        else cout << " ";
+    }
+    cout << "] " << static_cast<int>(progress * 100.0) << " % (" << current << " / " << total << ") \r";
+    cout.flush();
+}
 int main()
 {
     long int totAtomNum = 0;
     srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
-    int chainNum = 100;
-    int chainLen = 250;
-    double density = 0.05;
+    int chainNum;
+    int chainLen;
+    double m2rate;
+    double density; // Density of the polymer chains
+    cout << "Please input the number of polymer chains: ";
+    cin >> chainNum; // Read the number of polymer chains from user input
+    cout << "Please input the number of monomer in the chain: ";
+    cin >> chainLen; // Read the length of each polymer chain from user input
+    cout << "Please input the rate of Ethylene monomer in the chain (0.0 to 1.0): ";
+    cin >> m2rate; // Read the rate of monomer_C2 in the chain from user input
+    if (m2rate < 0.0 || m2rate > 1.0) {
+        cout << "Invalid rate! Please enter a value between 0.0 and 1.0." << endl;
+        return 1; // Exit the program if the rate is invalid
+    }
+    cout << "Please input the density of the polymer chains (g/cm^3): ";
+    cin >> density; // Read the density of the polymer chains from user input
+    
+    
+    cout << "Generating the distribution of polymer chains and adjusting the box size..." << endl;
     epm.resize(chainNum); // Resize the vector to hold 'chainNum' polymers
-    double m2rate = 0.3;
+    double approx_mass = 0.0; // Initialize mass to 0.0
     for (int i = 0; i < chainNum; i++)
     {
         epm[i].monomerNum = chainLen;
@@ -332,6 +362,7 @@ int main()
                 epm[i].monomers.push_back(monomer(1)); // Create a monomer of type 1 (monomer_C2)
                 epm[i].atomNum += 2;
                 totAtomNum += 2;
+                approx_mass += 28.0; // Add mass for monomer_C2 (CH2-CH2)
             } 
             else
             {
@@ -339,12 +370,49 @@ int main()
                 // which means epm[i].monomers.monomerType[j] = 2;
                 epm[i].atomNum += 3;
                 totAtomNum += 3;
+                approx_mass += 42.0; // Add mass for monomer_C3 (CH2-CH(CH3)-)
             } 
 
         }
     }
+    
+    double sFactor = 1.08894; // 1.54/ √2
+    long int boxLen = 2;
+    const double Navogadro = 6.02214076e23; // Avogadro's number
+    double itDensity = approx_mass / Navogadro / (boxLen * boxLen * boxLen * sFactor * sFactor * sFactor * 1.0e-24); // Initial density in g/cm^3
+    while (itDensity > density) // Adjust the box size until the density is less than or equal to the specified density
+    {
+        boxLen += 2; // Increase the box length by 2 in each dimension
+        itDensity = approx_mass / Navogadro / (boxLen * boxLen * boxLen * sFactor * sFactor * sFactor * 1.0e-24); // Recalculate density
+    }
+    cout << "Done!" << endl;
+    cout << "The number of atoms is: " << totAtomNum << endl;
+    double boxLenAngstroms = boxLen * sFactor; // Convert box length to Angstroms
+    cout << "The fcc box size is: " << boxLenAngstroms << " (Angstroms)" << endl;
+    cout << "The approximate density of the polymer chains is: " << itDensity << " (g/cm^3) " << endl;
+    box.resize(boxLen);                     // Resize the 3D vector 'box' to boxLen in each direction
+    for (int i = 0; i < boxLen; ++i)
+    {
+        box[i].resize(boxLen);
+        for (int j = 0; j < boxLen; ++j)
+        {
+            box[i][j].resize(boxLen);
+        }
+    }
+    string outfileName = "sequence_" + to_string(chainNum) + "C_" + to_string(chainLen) + "M" + ".txt";
+    ofstream outfile(outfileName);
+    cout << "Writing the monomer types to file: "<< outfileName << endl;
+    for (int i = 0; i < chainNum; i++)
+    {
+        outfile << epm[i].atomNum << "      ";
+        for (int j = 0; j < chainLen; j++) {
+            outfile << epm[i].monomers[j].monomerType << "    ";
+        }
+        outfile << endl;
+    }
 
-    outfile << "Total number of atoms: " << totAtomNum << std::endl;
+    cout << "Connecting the atoms in the polymer chains..." << endl;
+    // conneting the atoms
     long int atomId = 1;
     for (int i = 0; i < chainNum; i++)
     {
@@ -435,27 +503,10 @@ int main()
         }
 
     }
+    cout << "Done!!!" << endl;
 
-
-
+    cout << "Random walking the polymer chains in the FCC box..." << endl;
     // let's go self-avoid random walk
-    long int boxLen = 2;
-    long long boxVol = boxLen * boxLen * boxLen * density;
-    while (boxVol <= totAtomNum)
-    {
-        boxLen += 2;
-        boxVol = boxLen * boxLen * boxLen * density;
-    } 
-    box.resize(boxLen);                     // Resize the 3D vector 'box' to boxLen in each direction
-    for (int i = 0; i < boxLen; ++i)
-    {
-        box[i].resize(boxLen);
-        for (int j = 0; j < boxLen; ++j)
-        {
-            box[i][j].resize(boxLen);
-        }
-    }
-    
     for (int i = 0; i < boxLen; i++)        // init the fcc box
     {
         for (int j = 0; j < boxLen; j++)
@@ -480,18 +531,9 @@ int main()
 
     // Assign atoms to boxes with self-avoid random walk
 
-    // outfile << "Box length: " << boxLen << endl;
-    // for (int i = 0; i < chainNum; i++)
-    // {
-    //     outfile << epm[i].atomNum << "      ";
-    //     for (int j = 0; j < chainLen; j++) {
-    //         outfile << epm[i].monomers[j].monomerType << "    ";
-    //     }
-    //     outfile << endl;
-    // }
-
     for (int i = 0; i < chainNum; i++)                              // polymer chain loop
     {
+        printProgress(i + 1, chainNum); // Print progress of polymer chain placement
         // outfile << "Placing polymer chain " << i + 1 << " with " << epm[i].monomerNum<< " monomers." << endl;
         molFree(boxLen);
         bool Trapped = 0;                                           // Flag to check if the polymer chain is trapped
@@ -591,16 +633,22 @@ int main()
     // find4connections();
 
     // Generate bonds, angles, dihedrals, and impropers
+    cout << endl <<"Finding the topology in the polymer chains..." << endl;
     find2connections();
-    outfile << std::endl;
+    cout << "Found " << bondList.size() << " bonds." << endl;
+
     find3connections();
-    outfile << std::endl;
+    cout << "Found " << angleList.size() << " angles." << endl;
+
     find4connections();
-    outfile << std::endl;
+    cout << "Found " << dihedralList.size() << " dihedrals and " << improperList.size() << " impropers." << endl;
+
 
     // Output LAMMPS data file format
-    ofstream lmpfile("EPM.data");
-    lmpfile << "LAMMPS data file via EPM generator by Leo-LYY's code\n\n";
+    string lmpdataName = "EPM-" + to_string(chainNum) + "C_" + to_string(chainLen) + "M" + ".data";
+    cout << "Writing the LAMMPS data file: "<< lmpdataName << "..." << endl;
+    ofstream lmpfile(lmpdataName);
+    lmpfile << "LAMMPS data file via EPM generator by Leo-LYY's code\n";
     long int totalBonds = bondList.size();
     long int totalAngles = angleList.size();
     long int totalDihedrals = dihedralList.size();
@@ -616,7 +664,6 @@ int main()
 
     // Box bounds (use boxLen for bounds)
     int rxmin = 0, rymin = 0, rzmin = 0;
-    double sFactor = 1.08894; // 1.54/√2
     double rxmax = boxLen * sFactor, rymax = boxLen * sFactor, rzmax = boxLen * sFactor;
 
     lmpfile << totalAtoms << " atoms\n";
@@ -689,5 +736,7 @@ int main()
 
     lmpfile.close();
     outfile.close();
+    cout << "LAMMPS data file written successfully!" << endl;
+    cout << "Have a smooth simulation! :)" << endl;
 
 }
